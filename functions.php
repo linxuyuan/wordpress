@@ -55,6 +55,37 @@ function my_taxonomies_movie() {
 }
 add_action( 'init', 'my_taxonomies_movie', 0 );
 
+/* 根据文章对象获取文章图片 */
+function getImageByPost($post) {
+    $cate = get_the_category();
+    //echo $cate[0]->cat_ID;
+    //$post->post_parent->term_id
+    if (has_post_thumbnail($post->ID)) {
+        $image= wp_get_attachment_image_src(get_post_thumbnail_id($post->ID), 'medium');
+        $image = $image[0];
+        return $image;
+    } elseif (strlen($catImageUrl = getCategoryImage($cate[0]->cat_ID)) > 0) {
+        return $catImageUrl;
+    } elseif (strlen(getFirstImage($post->ID)) > 0) {
+        $image= getFirstImage($post->ID);
+        return $image;
+    } else {
+
+        $theme = get_option('themes');
+        if ($theme == '10') {
+            return get_stylesheet_directory_uri() . '/asset/img/themes/post-default10.jpg'; // TODO 常量化
+        } elseif ($theme == 11) {
+            return get_stylesheet_directory_uri() . '/asset/img/themes/post-default11.jpg';
+        } elseif ($theme == 12) {
+            return get_stylesheet_directory_uri() . '/asset/img/themes/post-default12.jpg';
+        } else {
+            return get_stylesheet_directory_uri() . '/asset/img/themes/post-default10.jpg'; // TODO
+        }
+
+    }
+}
+
+
 /**
  * 根据文章对象获取第一张图片
  * @param $post  文章对象
@@ -83,3 +114,33 @@ function get_product_img( $post ) {
     }
     return $first_img;
 }
+
+
+/**
+ * 数字分页函数
+ * 因为wordpress默认仅仅提供简单分页
+ * 所以要实现数字分页，需要自定义函数
+ * @Param int $range            数字分页的宽度
+ * @Return string|empty        输出分页的HTML代码
+ */
+/* Pagenavi */
+/*@分页功能*/
+function native_pagenavi(){
+    global $wp_query, $wp_rewrite;
+    $wp_query->query_vars["paged"] > 1 ? $current = $wp_query->query_vars["paged"] : $current = 1;
+    $pagination = array(
+        "base" => @add_query_arg("page","%#%"),
+        "format" => "",
+        "total" => $wp_query->max_num_pages,
+        "current" => $current,
+        "prev_text" => "« ",
+        "next_text" => " »"
+    );
+    if( $wp_rewrite->using_permalinks() )
+        $pagination["base"] = user_trailingslashit( trailingslashit( remove_query_arg("s",get_pagenum_link(1) ) ) . "page/%#%/", "paged");
+    if( !empty($wp_query->query_vars["s"]) )
+        $pagination["add_args"] = array("s"=>get_query_var("s"));
+    echo paginate_links($pagination);
+}
+
+register_nav_menu( 'header-menu', '顶部导航' );

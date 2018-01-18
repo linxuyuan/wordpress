@@ -1,4 +1,4 @@
-<?php /* Template Name: 通用页面模板 */ ?>
+<?php /* Template Name: 联系我们模板 */ ?>
 <?php get_header(); ?>
 <!-- Column 1 /Content -->
 
@@ -23,11 +23,11 @@
         </div>
         <div class="main-right">
 
-            <div class="right_title"><span class="right_name">产品列表<font>news</font></span>
+            <div class="right_title"><span class="right_name">联系我们<font>contact-us</font></span>
                 <div class="fast"><b>当前位置：</b>
                     <ul class="breadcrumbs">
                         <li><a href="http://xfl1688.com">首页</a></li>
-                        <li> &gt; <a href="http://ls.wpke.net/news">产品分类</a> &gt; 贴片电容</li>
+                        <li> &gt; <a href="http://ls.wpke.net/news">联系我们</a> </li>
                     </ul>
                 </div>
             </div>
